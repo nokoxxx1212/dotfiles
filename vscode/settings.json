@@ -1,0 +1,15 @@
+{
+    "editor.fontSize": 16,
+    "tabnine.experimentalAutoImports": true,
+    "workbench.colorTheme": "Monokai",
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "terminal.integrated.fontSize": 16,
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "python.createEnvironment.trigger": "off"
+}
