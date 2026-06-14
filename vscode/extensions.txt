@@ -1,0 +1,33 @@
+# VSCode Extensions
+#
+# インストール:
+#   cat extensions.txt | grep -v '^#' | grep -v '^$' | xargs -L 1 code --install-extension
+#
+# エクスポート (更新時):
+#   code --list-extensions > extensions.txt
+
+# --- 言語: Python ---
+ms-python.python
+ms-python.vscode-pylance
+ms-python.debugpy
+
+# --- 言語: YAML / Markdown / CSV ---
+redhat.vscode-yaml
+yzhang.markdown-all-in-one
+mechatroner.rainbow-csv
+
+# --- Jupyter ---
+ms-toolsai.jupyter
+ms-toolsai.jupyter-keymap
+
+# --- Remote ---
+ms-vscode-remote.remote-ssh
+
+# --- エディタ補助 ---
+vscodevim.vim
+oderwat.indent-rainbow
+shardulm94.trailing-spaces
+
+# --- その他 ---
+wayou.vscode-icons-mac
+ms-ceintl.vscode-language-pack-ja

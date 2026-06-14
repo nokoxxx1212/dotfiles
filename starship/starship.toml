@@ -1,0 +1,28 @@
+# シンプルで情報量多めの例
+add_newline = false
+
+[character]
+success_symbol = "❯"
+error_symbol = "✗"
+
+[git_branch]
+symbol = " "
+
+[git_status]
+conflicted = "!"
+ahead = "⇡"
+behind = "⇣"
+modified = "✚"
+staged = "●"
+untracked = "…"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+
+[python]
+format = "[$symbol$virtualenv]($style) "
+symbol = " "
+# .venv を見つけたら表示
+python_binary = "python3"
+
