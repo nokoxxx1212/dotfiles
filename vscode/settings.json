@@ -11,5 +11,8 @@
     },
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
-    "python.createEnvironment.trigger": "off"
+    "python.createEnvironment.trigger": "off",
+    "workbench.colorCustomizations": {
+        "terminal.integrated.background": "#102b18"
+    }
 }
