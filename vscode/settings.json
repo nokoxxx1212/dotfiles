@@ -1,21 +1,21 @@
 {
-    "editor.fontSize": 16,
-    "tabnine.experimentalAutoImports": true,
-    "workbench.colorTheme": "Monokai",
-    "workbench.editorAssociations": {
-        "*.ipynb": "jupyter-notebook"
-    },
-    "terminal.integrated.fontSize": 16,
-    "[python]": {
-        "editor.formatOnType": true
-    },
-    "editor.bracketPairColorization.enabled": true,
-    "editor.guides.bracketPairs": "active",
-    "python.createEnvironment.trigger": "off",
-    "workbench.panel.defaultLocation": "right",
-    "terminal.integrated.mouseWheelScrollSensitivity": 1,
-    "terminal.integrated.smoothScrolling": true,
-    "workbench.colorCustomizations": {
-        "terminal.integrated.background": "#102b18"
-    }
+  "editor.fontSize": 16,
+  "tabnine.experimentalAutoImports": true,
+  "workbench.colorTheme": "Monokai",
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "terminal.integrated.fontSize": 16,
+  "[python]": {
+    "editor.formatOnType": true
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "python.createEnvironment.trigger": "off",
+  "workbench.panel.defaultLocation": "right",
+  "terminal.integrated.mouseWheelScrollSensitivity": 1,
+  "terminal.integrated.smoothScrolling": true,
+  "workbench.colorCustomizations": {
+    "terminal.integrated.background": "#102b18"
+  }
 }
