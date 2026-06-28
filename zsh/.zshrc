@@ -39,3 +39,6 @@ fzf-git-switch() {
 }
 zle -N fzf-git-switch
 bindkey '^B' fzf-git-switch
+
+# Git Worktree ヘルパー (wt / wto)
+source "${0:A:h}/worktree.zsh"
