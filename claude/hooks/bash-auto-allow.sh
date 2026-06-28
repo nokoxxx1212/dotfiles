@@ -8,26 +8,28 @@
 #   ユーザーに確認 → JSON {"decision":"ask"} を stdout に出力して exit 0
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+COMMAND=$(jq -r '.tool_input.command // empty' <<< "$INPUT")
 
-# コマンドが空なら何もしない (通常の承認フローに委ねる)
+# コマンドが空なら判断できないのでユーザーに確認を委ねる
 if [[ -z "$COMMAND" ]]; then
+  echo '{"decision":"ask"}'
   exit 0
 fi
 
 # ── 自動拒否: 明確に危険なパターン ──
+# コマンド全体に対してチェック（パイプ・チェーン含む）
 DENY_PATTERNS=(
-  'rm -rf /'
-  'rm -rf ~'
-  'rm -rf \.'
-  'chmod 777'
-  'chmod -R 777'
-  'mkfs\.'
-  'dd if='
-  ':\(\)\{ :\|:& \};:'
-  'sudo rm'
-  '> /dev/sd'
-  'mv .* /dev/null'
+  'rm\s+-[a-zA-Z]*r[a-zA-Z]*f'   # rm -rf, rm -fr 等
+  'rm\s+-[a-zA-Z]*f[a-zA-Z]*r'
+  'sudo\s+'                        # sudo 全般
+  'chmod\s+(-R\s+)?0?777'          # chmod 777 / chmod 0777
+  'mkfs'
+  'dd\s+'                          # dd 全般
+  ':\(\)\{.*\};:'                  # fork bomb
+  '>\s*/dev/(sd|disk|nvme)'        # デバイスへの直接書き込み
+  'mv\s+.*\s+/dev/null'
+  'curl.*\|\s*(bash|sh|zsh)'       # curl | bash パターン
+  'wget.*\|\s*(bash|sh|zsh)'       # wget | bash パターン
 )
 
 for pattern in "${DENY_PATTERNS[@]}"; do
@@ -37,16 +39,22 @@ for pattern in "${DENY_PATTERNS[@]}"; do
   fi
 done
 
-# ── 自動許可: 安全な読み取り系コマンド ──
-# 先頭のコマンド名を抽出 (パイプや && の前の最初のコマンド)
-FIRST_CMD=$(echo "$COMMAND" | sed 's/[|&;].*//' | awk '{print $1}')
+# ── 複合コマンド（パイプ・チェーン・セミコロン）はユーザーに確認 ──
+# 拒否パターンに該当しなくても、複合コマンドは先頭だけでは安全性を判断できない
+if echo "$COMMAND" | grep -qE '[|&;]'; then
+  echo '{"decision":"ask"}'
+  exit 0
+fi
+
+# ── 自動許可: 安全な読み取り系コマンド（単体のみ） ──
+FIRST_CMD=$(awk '{print $1}' <<< "$COMMAND")
 
 SAFE_COMMANDS=(
   ls cat head tail wc grep egrep fgrep rg
   find fd which where whereis type
   echo printf pwd date whoami hostname uname
   file stat du df free
-  sort uniq tr cut sed awk
+  sort uniq tr cut
   diff comm
   tree eza
   jq yq
@@ -59,15 +67,15 @@ for safe in "${SAFE_COMMANDS[@]}"; do
   fi
 done
 
-# ── 自動許可: 安全な git サブコマンド ──
+# ── 自動許可: 安全な git 読み取り専用サブコマンド ──
 if [[ "$FIRST_CMD" == "git" ]]; then
-  GIT_SUB=$(echo "$COMMAND" | sed 's/[|&;].*//' | awk '{print $2}')
+  GIT_SUB=$(awk '{print $2}' <<< "$COMMAND")
   SAFE_GIT_SUBS=(
-    status log diff branch show tag remote
-    worktree stash ls-files ls-tree
+    status log diff show tag
+    branch remote
+    ls-files ls-tree
     rev-parse rev-list describe
     shortlog reflog name-rev
-    config
   )
   for sg in "${SAFE_GIT_SUBS[@]}"; do
     if [[ "$GIT_SUB" == "$sg" ]]; then
