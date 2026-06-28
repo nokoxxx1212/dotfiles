@@ -12,6 +12,9 @@
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs": "active",
     "python.createEnvironment.trigger": "off",
+    "workbench.panel.defaultLocation": "right",
+    "terminal.integrated.mouseWheelScrollSensitivity": 1,
+    "terminal.integrated.smoothScrolling": true,
     "workbench.colorCustomizations": {
         "terminal.integrated.background": "#102b18"
     }
