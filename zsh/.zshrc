@@ -40,44 +40,85 @@ fzf-git-switch() {
 zle -N fzf-git-switch
 bindkey '^B' fzf-git-switch
 
-# Git worktree を VS Code の別ウィンドウで開く（色を自動変更）
+# ── Git Worktree ヘルパー ──────────────────────────────
+
+# 内部関数: .code-workspace を生成して VS Code で開く
+_wt_internal() {
+  local wt_path="$1"
+  local branch="$2"
+  local repo_root
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || return 1
+
+  local ws_dir="${repo_root}/.claude/worktree-workspace"
+  mkdir -p "$ws_dir"
+
+  # ブランチ名ハッシュで色を決定
+  local colors=("#1e3a5f" "#3a1e5f" "#5f1e3a" "#1e5f3a" "#5f3a1e" "#3a5f1e" "#1e555f" "#5f1e55")
+  local hash
+  hash=$(echo -n "$branch" | cksum | awk '{print $1}')
+  local color="${colors[$((hash % ${#colors[@]} + 1))]}"
+
+  local ws_file="${ws_dir}/${branch}.code-workspace"
+  cat > "$ws_file" <<EOF
+{
+  "folders": [{ "path": "${wt_path}" }],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "titleBar.activeBackground": "${color}",
+      "titleBar.activeForeground": "#ffffff",
+      "titleBar.inactiveBackground": "${color}99",
+      "titleBar.inactiveForeground": "#cccccc"
+    }
+  }
+}
+EOF
+  code --new-window "$ws_file"
+  echo "✔ worktree '${branch}' opened (color: ${color})"
+}
+
+# wt <branch> — worktree を作成して VS Code で開く (base: origin/main)
 wt() {
   local branch="${1:?Usage: wt <branch-name>}"
   local repo_root
   repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "Not a git repo"; return 1; }
-  local wt_base="${repo_root}/.worktrees"
-  local wt_path="${wt_base}/${branch}"
 
-  # worktree がなければ作成
-  if [[ ! -d "$wt_path" ]]; then
-    mkdir -p "$wt_base"
-    # ブランチが存在すればそのまま、なければ新規作成
-    if git show-ref --verify --quiet "refs/heads/${branch}"; then
-      git worktree add "$wt_path" "$branch"
-    else
-      git worktree add -b "$branch" "$wt_path"
-    fi
+  local wt_path="${repo_root}/.claude/worktrees/${branch}"
+
+  # 既に存在すればそのまま開く
+  if [[ -d "$wt_path" ]]; then
+    _wt_internal "$wt_path" "$branch"
+    return 0
   fi
 
-  # worktree ごとに異なるタイトルバー色を設定
-  local colors=("#1e3a5f" "#3a1e5f" "#5f1e3a" "#1e5f3a" "#5f3a1e" "#3a5f1e")
-  local hash=$(echo -n "$branch" | cksum | awk '{print $1}')
-  local color="${colors[$((hash % ${#colors[@]} + 1))]}"
+  mkdir -p "${repo_root}/.claude/worktrees"
 
-  # worktree 用の VS Code 設定を作成
-  mkdir -p "${wt_path}/.vscode"
-  cat > "${wt_path}/.vscode/settings.json" <<EOF
-{
-  "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "${color}",
-    "titleBar.activeForeground": "#ffffff",
-    "titleBar.inactiveBackground": "${color}99",
-    "titleBar.inactiveForeground": "#cccccc"
-  }
+  if git show-ref --verify --quiet "refs/heads/${branch}"; then
+    # ローカルブランチが存在
+    git worktree add "$wt_path" "$branch"
+  elif git ls-remote --exit-code --heads origin "$branch" &>/dev/null; then
+    # リモートのみに存在
+    git worktree add --track -b "$branch" "$wt_path" "origin/${branch}"
+  else
+    # 新規ブランチ — origin/main をベースに作成
+    git worktree add -b "$branch" "$wt_path" origin/main
+  fi
+
+  _wt_internal "$wt_path" "$branch"
 }
-EOF
 
-  # 新しいウィンドウで開く
-  code --new-window "$wt_path"
-  echo "Opened worktree '${branch}' in new VS Code window (color: ${color})"
+# wto — 既存の worktree を fzf で選んで開く
+wto() {
+  local repo_root
+  repo_root=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "Not a git repo"; return 1; }
+
+  local selected
+  selected=$(git worktree list \
+    | grep "${repo_root}/.claude/worktrees/" \
+    | fzf --prompt="Select worktree: " --height=10) || return 0
+
+  local wt_path branch
+  wt_path=$(echo "$selected" | awk '{print $1}')
+  branch=$(basename "$wt_path")
+
+  _wt_internal "$wt_path" "$branch"
 }
