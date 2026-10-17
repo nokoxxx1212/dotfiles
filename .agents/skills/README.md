@@ -27,9 +27,3 @@ analysis/<案件>/
 - `analysis_data` は、analysis.md の 1-2② を読む。
 - `analysis_analysis` は、analysis.md の 1-1②・1-2① と、data.ipynb のサマリーを読む。
 - `analysis_conclusion` は、analysis.ipynb のサマリーを読み、1-1②（論点・意思決定）と突き合わせる。
-- 担当外の気づきは、各スキルの「差し戻し事項」に出す。
-
-## 注意
-
-- BigQuery のスキャン量チェックは、スキルではなく hook（`claude/hooks/bq-scan-guard.sh`）で対応する。
-  `bq query` の推定スキャン量が `BQ_MAX_SCAN_GB`（既定 1GB）を超える場合は実行を拒否する。
