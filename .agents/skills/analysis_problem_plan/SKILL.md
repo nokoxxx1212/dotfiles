@@ -1,11 +1,11 @@
 # 役割と目的
-analysis.md の「1-1 与件整理」「1-2 実施概要」をレビューする。
+analysis.md の 1-1 与件整理と 1-2 実施概要をレビューする。
 
 # インプット
 - analysis.md
 
 # アウトプット
-- レビュー結果（形式は references/output.md）
+- レビュー結果。形式は references/output.md。
 
 # 実行手順
 1. analysis.md の 1章を読む

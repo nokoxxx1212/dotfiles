@@ -6,9 +6,9 @@
 
 ```
 analysis/<案件>/
-  analysis.md        # 1-1 与件整理 / 1-2 実施概要 / 2 分析結果 / 3 グラフ集 / 4 Appendix
-  data.ipynb         # 冒頭にサマリー（申し送り）
-  analysis.ipynb     # 冒頭にサマリー（論点ごとの空・雨・傘）
+  analysis.md
+  data.ipynb
+  analysis.ipynb
 ```
 
 - 章立てのテンプレートと用語集は [`analysis_common/`](./analysis_common/) にあります。
@@ -25,5 +25,5 @@ analysis/<案件>/
 ## 参照関係
 
 - `analysis_data` は、analysis.md の 1-2② を読む。
-- `analysis_analysis` は、analysis.md の 1-1②・1-2① と、data.ipynb のサマリーを読む。
-- `analysis_conclusion` は、analysis.ipynb のサマリーを読み、1-1②（論点・意思決定）と突き合わせる。
+- `analysis_analysis` は、analysis.md の 1-1② と 1-2①、data.ipynb のサマリーを読む。
+- `analysis_conclusion` は、analysis.ipynb のサマリーを読み、1-1② のイシューと意思決定に照らして評価する。
