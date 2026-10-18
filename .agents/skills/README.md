@@ -26,4 +26,4 @@ analysis/<案件>/
 
 - `analysis_data` は、analysis.md の 1-2② を読む。
 - `analysis_analysis` は、analysis.md の 1-1② と 1-2①、data.ipynb のサマリーを読む。
-- `analysis_conclusion` は、analysis.ipynb のサマリーを読み、1-1② のイシューと意思決定に照らして評価する。
+- `analysis_conclusion` は、analysis.ipynb のサマリーを読み、1-1① の意思決定と 1-1② のイシューに照らして評価する。
