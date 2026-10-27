@@ -11,5 +11,5 @@
 # 実行手順
 1. analysis.md の 1-2② 対象データを読む
 2. references/checklist.md に従い、data.ipynb を作成・実行する
-3. 前処理は行わず、データの俯瞰と品質確認に徹する
+3. 前処理と加工は行わず、ステップ1〜3に徹する
 4. references/notebook.md の形式で、冒頭にサマリーを書く
