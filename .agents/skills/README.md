@@ -20,7 +20,7 @@ analysis/<案件>/
 | 1・2 | Problem・Plan | [`analysis_problem_plan`](./analysis_problem_plan/) | レビュー | analysis.md 1-1・1-2 |
 | 3 | Data | [`analysis_data`](./analysis_data/) | 実行 | data.ipynb |
 | 4 | Analysis | [`analysis_analysis`](./analysis_analysis/) | 実行 | analysis.ipynb |
-| 5 | Conclusion | [`analysis_conclusion`](./analysis_conclusion/) | レビュー | analysis.md 2〜4 |
+| 5 | Conclusion | [`analysis_conclusion`](./analysis_conclusion/) | レビュー | analysis.md エグゼクティブサマリー・2・3 |
 
 ## 参照関係
 
